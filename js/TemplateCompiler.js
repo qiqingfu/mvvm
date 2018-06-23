@@ -71,11 +71,11 @@ class TemplateCompiler {
 
 
     /**
-     * compileElement: 解析元素指令 v-
-     * compileText : 解析表达式 {{}}
+     * @ compileElement: 解析元素指令 v-
+     * @ compileText : 解析表达式 {{}}
      */
     compileElement (node) {
-        
+
         // 1. 获取当前元素节点的所有属性
         let arrs = node.attributes;
         // 2. 遍历当前元素的所有属性

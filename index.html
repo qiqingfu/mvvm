@@ -9,6 +9,7 @@
 <body>
     <div id="app">
         <h2 v-text="message">我是h2</h2>
+        <input type="text" v-model="name">
     </div>
     <script src="./js/TemplateCompiler.js"></script>
     <script src="./js/mvvm.js"></script>
@@ -16,7 +17,8 @@
         let vm = new MVVM({
             el:"#app",
             data:{
-                message:"Hello,MVVM!"
+                message:"Hello,MVVM!",
+                name:"yang"
             }
         })
         console.log(vm)
