@@ -75,6 +75,7 @@ class TemplateCompiler {
      * compileText : 解析表达式 {{}}
      */
     compileElement (node) {
+        
         // 1. 获取当前元素节点的所有属性
         let arrs = node.attributes;
         // 2. 遍历当前元素的所有属性
@@ -88,8 +89,8 @@ class TemplateCompiler {
                 // 符合条件指令的value
                 let expr = arr.value
 
-                // 开始数据对应到模板
-                CompilerUtils.text(node, this.vm, expr)
+                // 开始数据对应到模板,动态类型
+                CompilerUtils[type](node, this.vm, expr)
             }
         })
     }
@@ -109,6 +110,13 @@ CompilerUtils = {
        updateFn && updateFn(node,vm.$data[expr])
     },
 
+    model(node, vm, expr){
+        // 1. 找到更新对象的更新方法
+         let updateFn = this.updater['modelUpdater']
+        // 2. 执行方法
+        updateFn && updateFn(node,vm.$data[expr])
+     },
+
     // 定义更新规则
     /**
      * v-text 将数据更新到html
@@ -121,6 +129,9 @@ CompilerUtils = {
          */
         textUpdater(node,value){
             node.textContent = value
+        },
+        modelUpdater(node,value){
+            node.value = value
         }
     }
 }
