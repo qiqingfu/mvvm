@@ -20,18 +20,46 @@ class Observer {
 
     // 重新定义key值
     defineReactive (obj, key,value) {
+        
+        let dep = new Dep()
+
         Object.defineProperty(obj,key,{
             enumerable:true,
             configurable:false,
             
             // getter 取值
             get(){
+                Dep.target && dep.addSub(Dep.target)  //将订阅者添加到列表中
                 return value
             },
             // setter 设置值
             set(newValue){
                 value = newValue
+                dep.notify(value)
             }
+        })
+    }
+}
+
+/**
+ * 创建发布者
+ *  管理订阅者
+ *  通知
+ */
+class Dep {
+    constructor(){
+        this.subs = []
+    }
+
+    // 添加订阅
+    addSub (sub){
+        this.subs.push(sub)
+    }
+
+    // 集体通知
+    notify(newValue){
+        this.subs.forEach((sub) => {
+            sub.update(newValue)
         })
     }
 }
