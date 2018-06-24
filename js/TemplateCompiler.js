@@ -17,7 +17,6 @@ class TemplateCompiler {
     }
 
     // 工具方法
-    // #app || document.querySelector('#app')
     isElementNode (node) {
         return node.nodeType === 1
     }
@@ -47,7 +46,6 @@ class TemplateCompiler {
     // 解析模板
     compile (parent) {
       let childNodes = parent.childNodes
-      // 遍历每一个节点
       this.toArray( childNodes ).forEach((node) => {
           // 元素节点(解析指令)
           if(this.isElementNode(node)){
@@ -61,13 +59,13 @@ class TemplateCompiler {
                     return $1
                  })
                  
-                 // exptext 为 {{message}}表达式中的 message
                  // 解析表达式
                  this.compileText(node, exptext)
               }
           }
 
       })
+       
       // 3. 判断节点类型
       // 1) 属性节点(解析指令)
       // 2) 文本节点(解析指令)
@@ -80,13 +78,15 @@ class TemplateCompiler {
      * @ compileText : 解析表达式 {{}}
      */
     compileElement (node) {
+
         let arrs = node.attributes;
-        // 遍历当前元素的所有属性
         this.toArray(arrs).forEach((arr) => {
             let arrName = arr.name;
              // 判断属性是不是指令属性
             if(this.isDirective(arrName)){
+    
                 let type = arrName.slice(2);
+                
                 let expr = arr.value
 
                 // 开始数据对应到模板,动态类型
@@ -108,6 +108,11 @@ CompilerUtils = {
         let updateFn = this.updater['textUpdater']
        // 2. 执行方法
        updateFn && updateFn(node,vm.$data[expr])
+       
+       // 通过newValue获取最新数据值,映射到视图
+       new Watcher(vm,expr,(newValue) => {
+            updateFn && updateFn(node,newValue)
+       })
     },
 
     model(node, vm, expr){
@@ -115,9 +120,19 @@ CompilerUtils = {
          let updateFn = this.updater['modelUpdater']
         // 2. 执行方法
         updateFn && updateFn(node,vm.$data[expr])
+
+        //为model添加一个订阅者
+        new Watcher(vm,expr,(newValue) => {
+            updateFn && updateFn(node,newValue)
+       })
+
+        // 3. 视图到模型[观察者模式]
+        node.addEventListener('input',(e) => {
+            let newValue = e.target.value 
+            vm.$data[expr] = newValue
+        })
      },
 
-     
     // 定义更新规则
     updater:{
         /**
