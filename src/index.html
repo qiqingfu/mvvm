@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mvue</title>
+</head>
+<body>
+<div id="app">
+  <h2>{{ prosen.name }} -- {{ prosen.age }}</h2>
+  <h3>{{ prosen.fav }}</h3>
+  <ul>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+  </ul>
+  <p>{{ message }}</p>
+  <p v-text="message"></p>
+  <p v-html="htmlContent"></p>
+  <input type="text" v-model="message">
+  <button>{{ message }}</button>
+</div>
+
+<!--<script src="Mvue.js"></script>-->
+<script type="module">
+
+  import Mvue from './Mvue.js'
+
+  const vm = new Mvue({
+    el: '#app',
+    data: {
+      prosen: {
+        name: 'apy',
+        age: 18,
+        fav: 'coding'
+      },
+      message: '实现MVVM原理',
+      htmlContent: '<p>这是v-html指令</p>'
+    }
+  });
+
+</script>
+</body>
+</html>

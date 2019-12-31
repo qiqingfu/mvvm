@@ -4,7 +4,8 @@
   "description": "mvvm",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fix": "standard --fix"
   },
   "repository": {
     "type": "git",
@@ -16,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/qiqingfu/mvvm/issues"
   },
-  "homepage": "https://github.com/qiqingfu/mvvm#readme"
+  "homepage": "https://github.com/qiqingfu/mvvm#readme",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "standard": "^14.3.1"
+  }
 }
