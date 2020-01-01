@@ -16,8 +16,12 @@
   <p>{{ message }}</p>
   <p v-text="message"></p>
   <p v-html="htmlContent"></p>
+  <p v-if="true">我是 v-if指令</p>
+  <p>
+    <a v-bind:href="url">我是一个a标签</a>
+  </p>
   <input type="text" v-model="message">
-  <button>{{ message }}</button>
+  <button v-on:click="handleClick" v-show="showBtn">{{ message }}</button>
 </div>
 
 <!--<script src="Mvue.js"></script>-->
@@ -34,7 +38,15 @@
         fav: 'coding'
       },
       message: '实现MVVM原理',
-      htmlContent: '<p>这是v-html指令</p>'
+      url: 'https://www.baidu.com',
+      htmlContent: '<p>这是v-html指令</p>',
+      showBtn: true,
+      show: false,
+    },
+    methods: {
+      handleClick() {
+        console.log(this);
+      }
     }
   });
 

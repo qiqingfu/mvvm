@@ -14,6 +14,16 @@
  */
 const toArray = arr => Array.prototype.slice.call(arr);
 
+/**
+ * 匹配{{  }}插值的文本节点
+ * @param text
+ */
+const matchTextNode = text => {
+  const reg = /{{(.+?)}}/;
+  return reg.test(text);
+};
+
 export default {
-  toArray
+  toArray,
+  matchTextNode
 };

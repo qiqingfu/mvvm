@@ -9,10 +9,16 @@ import util from './util.js';
  * @param node DOM元素
  * @param type 指令对应的值 v-text="msg"  msg
  * @param vm Mvue实例
- * @param eventName 事件类型
+ * @param modifiers 修饰符:后面的值 v-on:click (click)
  */
 const compileUtil = {
   getValue (vm, type) {
+    if (type === 'false') {
+      return false;
+    }
+    if (type === 'true') {
+      return true;
+    }
     return type.split('.').reduce((data, currentVal) => {
       return data[currentVal];
     }, vm.$data);
@@ -28,8 +34,30 @@ const compileUtil = {
   model (node, type, vm) {
     node.value = this.getValue(vm, type);
   },
-  on () {
+  bind (node, type, vm, attr) {
+    const val = this.getValue(vm, type);
+    node.setAttribute(attr, val);
+  },
+  if (node, type, vm) {
+    const nextNode = node.nextElementSibling;
+    const val = this.getValue(vm, type);
 
+    if (val) {
+      if (nextNode !== null) {
+        node.parentNode.insertBefore(node, nextNode);
+      } else {
+        node.parentNode.appendChild(node);
+      }
+    } else {
+      node.parentNode.removeChild(node);
+    }
+  },
+  show (node, type, vm) {
+    node.style.display = this.getValue(vm, type) ? 'block' : 'none';
+  },
+  on (node, type, vm, eventName) {
+    const eventFn = vm.$options.methods && vm.$options.methods[type];
+    node.addEventListener(eventName, eventFn.bind(vm));
   },
   updater: {
     /**
@@ -107,24 +135,34 @@ class Compile {
       .forEach(attr => {
         /**
          * v-text="message"
+         * v-bind:href="url"
          * name = v-text
          * value = message
          */
         const { name, value } = attr;
         if (this.isDirective(name)) {
           const [, directiveName] = name.split('-');
-          const [type, eventName] = directiveName.split(':');
-          compileUtil[type](node, value, this.vm, eventName);
+          const [type, modifiers] = directiveName.split(':');
+          compileUtil[type](node, value, this.vm, modifiers);
+          node.removeAttribute(name);
         }
       });
   }
 
   /**
    * 处理文本节点
+   * {{ prosen.name }} 插值的处理
    * @param text
    */
   compileText (text) {
+    const textContent = text.textContent;
+    if (util.matchTextNode(textContent)) {
+      const regText = /{{(\s?.+?\s?)}}/g;
+      const match = regText.exec(textContent);
+      const type = match[1].trim();
 
+      compileUtil.text(text, type, this.vm);
+    }
   }
 
   /**
