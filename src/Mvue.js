@@ -4,6 +4,7 @@
  */
 
 import Compile from './Compile.js';
+import Observer from './Observer.js';
 
 class Mvue {
   constructor (options) {
@@ -12,6 +13,9 @@ class Mvue {
     this.$options = options;
 
     if (this.$el) {
+      // 劫持数据
+      const observer = new Observer(this.$data);
+      console.log('observer', observer);
       // 1. Compile 解析DOM
       const compile = new Compile(this.$el, this);
       console.log(compile);
