@@ -1,5 +1,8 @@
 mvvm
 
+## 简单 demo
+[https://qiqingfu.github.io/mvvm/src/index](https://qiqingfu.github.io/mvvm/src/index)
+
 ## 实现简单指令:
 
 - v-text
@@ -37,15 +40,19 @@ mvvm
   <p>
     <a v-bind:href="url">我是一个a标签</a>
   </p>
-  <input type="text" v-model="message">
-  <button v-on:click="handleClick" v-show="true">{{ message }}</button>
+  <div>
+    这是 prosen的名字
+    <input type="text" v-model="prosen.name">
+  </div>
+  <button v-on:click="handleClick" v-show="showBtn">修改prosen.name的值</button>
 </div>
 
+<!--<script src="Mvue.js"></script>-->
 <script type="module">
 
   import Mvue from './Mvue.js'
 
-  const vm = new Mvue({
+  window.vm = new Mvue({
     el: '#app',
     data: {
       prosen: {
@@ -55,11 +62,12 @@ mvvm
       },
       message: '实现MVVM原理',
       url: 'https://www.baidu.com',
-      htmlContent: '<p>这是v-html指令</p>'
+      htmlContent: '<p>这是v-html指令</p>',
+      showBtn: true,
     },
     methods: {
       handleClick() {
-        console.log(this);
+        this.prosen.name = this.prosen.name.split('').reverse().join('');
       }
     }
   });
@@ -67,5 +75,4 @@ mvvm
 </script>
 </body>
 </html>
-
 ```
