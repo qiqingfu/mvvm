@@ -20,7 +20,10 @@
   <p>
     <a v-bind:href="url">我是一个a标签</a>
   </p>
-  <input type="text" v-model="message">
+  <div>
+    这是 prosen的名字
+    <input type="text" v-model="prosen.name">
+  </div>
   <button v-on:click="handleClick" v-show="showBtn">{{ message }}</button>
 </div>
 
@@ -41,7 +44,6 @@
       url: 'https://www.baidu.com',
       htmlContent: '<p>这是v-html指令</p>',
       showBtn: true,
-      show: false,
     },
     methods: {
       handleClick() {

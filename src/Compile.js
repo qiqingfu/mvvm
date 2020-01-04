@@ -3,76 +3,9 @@
  * @date 2020-01-01 00:09
  */
 import util from './util.js';
+import Directive from './Directive.js';
 
-/**
- * 策略模式, 对一种结果设置多种算法
- * @param node DOM元素
- * @param type 指令对应的值 v-text="msg"  msg
- * @param vm Mvue实例
- * @param modifiers 修饰符:后面的值 v-on:click (click)
- */
-const compileUtil = {
-  getValue (vm, type) {
-    if (type === 'false') {
-      return false;
-    }
-    if (type === 'true') {
-      return true;
-    }
-    return type.split('.').reduce((data, currentVal) => {
-      return data[currentVal];
-    }, vm.$data);
-  },
-  text (node, type, vm) {
-    const val = this.getValue(vm, type);
-    this.updater.updateText(node, val);
-  },
-  html (node, type, vm) {
-    const val = this.getValue(vm, type);
-    this.updater.updateHtml(node, val);
-  },
-  model (node, type, vm) {
-    node.value = this.getValue(vm, type);
-  },
-  bind (node, type, vm, attr) {
-    const val = this.getValue(vm, type);
-    node.setAttribute(attr, val);
-  },
-  if (node, type, vm) {
-    const nextNode = node.nextElementSibling;
-    const val = this.getValue(vm, type);
-
-    if (val) {
-      if (nextNode !== null) {
-        node.parentNode.insertBefore(node, nextNode);
-      } else {
-        node.parentNode.appendChild(node);
-      }
-    } else {
-      node.parentNode.removeChild(node);
-    }
-  },
-  show (node, type, vm) {
-    node.style.display = this.getValue(vm, type) ? 'block' : 'none';
-  },
-  on (node, type, vm, eventName) {
-    const eventFn = vm.$options.methods && vm.$options.methods[type];
-    node.addEventListener(eventName, eventFn.bind(vm));
-  },
-  updater: {
-    /**
-     * 更新 v-text 指令视图
-     * @param node
-     * @param val
-     */
-    updateText (node, val) {
-      node.textContent = val;
-    },
-    updateHtml (node, val) {
-      node.innerHTML = val;
-    }
-  }
-};
+const dorective = new Directive();
 
 class Compile {
   /**
@@ -143,7 +76,7 @@ class Compile {
         if (this.isDirective(name)) {
           const [, directiveName] = name.split('-');
           const [type, modifiers] = directiveName.split(':');
-          compileUtil[type](node, value, this.vm, modifiers);
+          dorective[type](node, value, this.vm, modifiers);
           node.removeAttribute(name);
         }
       });
@@ -161,7 +94,7 @@ class Compile {
       const match = regText.exec(textContent);
       const type = match[1].trim();
 
-      compileUtil.text(text, type, this.vm);
+      dorective.text(text, type, this.vm);
     }
   }
 

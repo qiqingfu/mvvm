@@ -49,8 +49,38 @@ function isPlanObject (obj) {
   return typeof key === 'undefined' || hasOwn.call(obj, key);
 }
 
+/**
+ * 根据key取value值
+ * @param vm Mvue实例对象
+ * @param type [man.prosen.age | message]
+ * @returns {string|boolean}
+ */
+const getValue = (vm, type) => {
+  if (type === 'false') {
+    return false;
+  }
+  if (type === 'true') {
+    return true;
+  }
+  return type.split('.').reduce((data, currentVal) => {
+    return data[currentVal];
+  }, vm.$data);
+};
+
+const setValue = (vm, type, newVal) => {
+  type = type.split('.');
+  const key = type.pop();
+  const data = type.reduce((data, currentVal) => {
+    return data[currentVal];
+  }, vm.$data);
+
+  data[key] = newVal;
+};
+
 export default {
   toArray,
   matchTextNode,
-  isPlanObject
+  isPlanObject,
+  getValue,
+  setValue
 };

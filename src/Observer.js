@@ -4,6 +4,7 @@
  */
 
 import util from './util.js';
+import Dep from './Dep.js';
 /**
  * 劫持 data 中每一个属性
  */
@@ -33,11 +34,13 @@ class Observer {
    * @param val  data 中的值
    */
   defineProperty (data, key, val) {
+    const dep = new Dep();
     this.observer(val);
     Object.defineProperty(data, key, {
       configurable: true,
       enumerable: true,
-      get() {
+      get () {
+        Dep.target && dep.addSub(Dep.target);
         return val;
       },
       set: v => {
@@ -45,6 +48,7 @@ class Observer {
         if (v !== val) {
           val = v;
         }
+        dep.notify();
       }
     });
   }
