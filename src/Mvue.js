@@ -5,6 +5,7 @@
 
 import Compile from './Compile.js';
 import Observer from './Observer.js';
+import ProxyData from './Proxy.js';
 
 class Mvue {
   constructor (options) {
@@ -14,12 +15,13 @@ class Mvue {
 
     if (this.$el) {
       // 1.数据观察者
-      const observer = new Observer(this.$data);
-      console.log('observer', observer);
+      this._observer = new Observer(this.$data);
 
       // 2. 指令解析器
-      const compile = new Compile(this.$el, this);
-      console.log(compile);
+      this._watcher = new Compile(this.$el, this);
+
+      // 3. 代理属性
+      this._proxy = new ProxyData(this, this.$data);
     }
   }
 }

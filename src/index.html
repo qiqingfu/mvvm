@@ -24,7 +24,7 @@
     这是 prosen的名字
     <input type="text" v-model="prosen.name">
   </div>
-  <button v-on:click="handleClick" v-show="showBtn">{{ message }}</button>
+  <button v-on:click="handleClick" v-show="showBtn">修改prosen.name的值</button>
 </div>
 
 <!--<script src="Mvue.js"></script>-->
@@ -48,6 +48,7 @@
     methods: {
       handleClick() {
         console.log(this);
+        this.prosen.name = this.prosen.name.split('').reverse().join('');
       }
     }
   });
