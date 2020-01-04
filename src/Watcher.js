@@ -37,6 +37,7 @@ class Watcher {
   update () {
     const newVal = this.getValue();
     if (this.oldValue !== newVal) {
+      this.oldValue = newVal;
       this.cb(newVal);
     }
   }

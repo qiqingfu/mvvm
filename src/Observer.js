@@ -44,6 +44,7 @@ class Observer {
         return val;
       },
       set: v => {
+        // eslint-disable-next-line no-debugger
         this.observer(v);
         if (v !== val) {
           val = v;
